@@ -41,7 +41,19 @@ router.post('/create', (req, res) => {
 });
 const crud=require('./controllers/crud')
 router.post('/store',crud.save)
+router.get('/tareas',(req,res)=>{
+    conexion.query('SELECT * FROM empleados',(err,resultados)=>{
+        if(err)
+        throw err
+    else
+    res.render('tareas',{resultados:resultados})
+    })
+})
+router.post('/tareasfinal',crud.tareaxs)
+router.get('/tareasmessage',(req,res)=>{
+    res.render('tareasfin')
 
+})
 
 
 /*router.get('/',(req,res)=>{
