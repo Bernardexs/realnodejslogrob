@@ -56,6 +56,10 @@ exports.tareaxs = (req, res) => {
     });
 };
 
+  
+  // Llama a la función para calcular y exhibir el total en dólares de los salarios pagados y ordenar por fecha
+  
+
 /*exports.save=(req,res)=>{
     const nombre=req.body.nombre
     const ocupacion=req.body.ocupacion

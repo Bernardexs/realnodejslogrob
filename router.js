@@ -32,11 +32,6 @@ router.get('/create', (req, res) => {
     }
 });
 router.post('/create', (req, res) => {
-    const buscar = req.body.buscar;
-
-    // Realiza alguna lógica de procesamiento si es necesario
-
-    // Redirige a la misma ruta sin el parámetro de búsqueda
     res.redirect('/create');
 });
 const crud=require('./controllers/crud')
@@ -54,7 +49,43 @@ router.get('/tareasmessage',(req,res)=>{
     res.render('tareasfin')
 
 })
-
+router.get('/total', (req, res) => {
+    // Consultar total en dólares de salarios pagados por fecha de contratación
+    const consultaTotalSalariosPorFecha = `
+      SELECT fechaContratacion, SUM(salario) as totalSalarios
+      FROM empleados
+      WHERE pagado = 1
+      GROUP BY fechaContratacion
+      ORDER BY fechaContratacion
+    `;
+  
+    conexion.query(consultaTotalSalariosPorFecha, (err, empleadosPorFecha) => {
+      if (err) {
+        console.error('Error al consultar salarios por fecha: ' + err.stack);
+        return res.status(500).send('Error en el servidor');
+      }
+  
+      // Consultar el total general en dólares de salarios pagados
+      const consultaTotalSalariosGeneral = `
+        SELECT SUM(salario) as totalSalariosGeneral
+        FROM empleados
+        WHERE pagado = 1
+      `;
+  
+      conexion.query(consultaTotalSalariosGeneral, (err, resultadoTotalSalarios) => {
+        if (err) {
+          console.error('Error al consultar total general de salarios: ' + err.stack);
+          return res.status(500).send('Error en el servidor');
+        }
+  
+        const totalSalariosGeneral = resultadoTotalSalarios[0].totalSalariosGeneral;
+  
+        // Renderizar la vista con los datos
+        res.render('total', { empleadosPorFecha, totalSalariosGeneral });
+      });
+    });
+  });
+  
 
 /*router.get('/',(req,res)=>{
     conexion.query('SELECT * FROM usuario',(err,resultados)=>{
